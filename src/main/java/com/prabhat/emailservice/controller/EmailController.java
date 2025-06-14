@@ -1,6 +1,7 @@
 package com.prabhat.emailservice.controller;
 
 import com.prabhat.emailservice.dto.EmailRequest;
+import com.prabhat.emailservice.dto.EmailRequestWrapper;
 import com.prabhat.emailservice.dto.EmailResponse;
 import com.prabhat.emailservice.service.EmailService;
 import jakarta.validation.Valid;
@@ -28,8 +29,11 @@ public class EmailController {
 
     @PostMapping(value = "/send", consumes = {"multipart/form-data"})
     public ResponseEntity<List<EmailResponse>> sendEmails(
-            @Valid @RequestPart("requests") List<EmailRequest> requests,
+            @Valid @RequestPart("requests") EmailRequestWrapper wrapper,
             @RequestPart("resume") MultipartFile resume) {
+
+        List<EmailRequest> requests = wrapper.getRequests();
+
         log.info("Received {} email requests with resume", requests.size());
 
         List<EmailResponse> responses = new ArrayList<>();
